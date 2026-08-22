@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
+import Attendance from "./pages/Attendance";
 import "./index.css";
 
 function App() {
@@ -100,15 +101,7 @@ function App() {
 
               <Route path="/employees" element={<Employees />} />
 
-              <Route
-                path="/attendance"
-                element={
-                  <div className="placeholder-page">
-                    <h2>Attendance</h2>
-                    <p>Attendance management will appear here.</p>
-                  </div>
-                }
-              />
+             <Route path="/attendance" element={<Attendance />} />
 
               <Route
                 path="/leaves"
