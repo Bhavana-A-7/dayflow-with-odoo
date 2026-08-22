@@ -3,6 +3,8 @@ import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Attendance from "./pages/Attendance";
 import Leaves from "./pages/Leaves";
+import Reports from "./pages/Reports";
+import Departments from "./pages/Departments";
 
 import "./index.css";
 
@@ -107,26 +109,9 @@ function App() {
 
               <Route path="/leaves" element={<Leaves />} />
               
-
-              <Route
-                path="/departments"
-                element={
-                  <div className="placeholder-page">
-                    <h2>Departments</h2>
-                    <p>Department management will appear here.</p>
-                  </div>
-                }
-              />
-
-              <Route
-                path="/reports"
-                element={
-                  <div className="placeholder-page">
-                    <h2>Reports</h2>
-                    <p>HR reports will appear here.</p>
-                  </div>
-                }
-              />
+            <Route path="/departments" element={<Departments />}/>
+              
+              <Route path="/reports" element={<Reports />} />
             </Routes>
           </div>
 
