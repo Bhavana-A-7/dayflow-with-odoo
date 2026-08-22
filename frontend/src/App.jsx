@@ -13,6 +13,8 @@ import Leaves from "./pages/Leaves";
 import Reports from "./pages/Reports";
 import Departments from "./pages/Departments";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Payroll from "./pages/Payroll";
 
 import "./index.css";
 
@@ -69,6 +71,7 @@ function App() {
           </div>
 
           <div className="menu-section">
+
             <p className="menu-title">MAIN MENU</p>
 
             <NavLink to="/" className="nav-item">
@@ -76,12 +79,12 @@ function App() {
               Dashboard
             </NavLink>
 
-           {role === "ADMIN" && (
-  <NavLink to="/employees" className="nav-item">
-    <span>♙</span>
-    Employees
-  </NavLink>
-)}
+            {role === "ADMIN" && (
+              <NavLink to="/employees" className="nav-item">
+                <span>♙</span>
+                Employees
+              </NavLink>
+            )}
 
             <NavLink to="/attendance" className="nav-item">
               <span>◷</span>
@@ -92,23 +95,37 @@ function App() {
               <span>▤</span>
               Leave Management
             </NavLink>
+
+            <NavLink to="/profile" className="nav-item">
+              <span>♙</span>
+              My Profile
+            </NavLink>
+
+            {/* Payroll is available to both Admin and Employee */}
+            <NavLink to="/payroll" className="nav-item">
+              <span>₹</span>
+              Payroll
+            </NavLink>
+
           </div>
 
           {role === "ADMIN" && (
-  <div className="menu-section">
-    <p className="menu-title">MANAGEMENT</p>
+            <div className="menu-section">
 
-    <NavLink to="/departments" className="nav-item">
-      <span>⌂</span>
-      Departments
-    </NavLink>
+              <p className="menu-title">MANAGEMENT</p>
 
-    <NavLink to="/reports" className="nav-item">
-      <span>▥</span>
-      Reports
-    </NavLink>
-  </div>
-)}
+              <NavLink to="/departments" className="nav-item">
+                <span>⌂</span>
+                Departments
+              </NavLink>
+
+              <NavLink to="/reports" className="nav-item">
+                <span>▥</span>
+                Reports
+              </NavLink>
+
+            </div>
+          )}
 
           <div className="sidebar-bottom">
 
@@ -123,7 +140,9 @@ function App() {
 
             <div className="profile">
 
-              <div className="avatar">BH</div>
+              <div className="avatar">
+                BH
+              </div>
 
               <div className="profile-info">
                 <strong>{username || "User"}</strong>
@@ -150,7 +169,9 @@ function App() {
 
             <div>
               <h1>Good morning, Bhavana 👋</h1>
-              <p>Here's what's happening with your team today.</p>
+              <p>
+                Here's what's happening with your team today.
+              </p>
             </div>
 
             <div className="top-actions">
@@ -212,23 +233,41 @@ function App() {
                 }
               />
 
-             <Route
-  path="/departments"
-  element={
-    <AdminRoute>
-      <Departments />
-    </AdminRoute>
-  }
-/>
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
 
-             <Route
-  path="/reports"
-  element={
-    <AdminRoute>
-      <Reports />
-    </AdminRoute>
-  }
-/>
+              <Route
+                path="/payroll"
+                element={
+                  <ProtectedRoute>
+                    <Payroll />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/departments"
+                element={
+                  <AdminRoute>
+                    <Departments />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/reports"
+                element={
+                  <AdminRoute>
+                    <Reports />
+                  </AdminRoute>
+                }
+              />
 
               <Route
                 path="/login"

@@ -4,12 +4,21 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Department, Employee, Attendance, Leave
+
+from .models import (
+    Department,
+    Employee,
+    Attendance,
+    Leave,
+    Payroll,
+)
+
 from .serializers import (
     DepartmentSerializer,
     EmployeeSerializer,
     AttendanceSerializer,
     LeaveSerializer,
+    PayrollSerializer,
 )
 
 
@@ -31,6 +40,12 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 class LeaveViewSet(viewsets.ModelViewSet):
     queryset = Leave.objects.all()
     serializer_class = LeaveSerializer
+
+
+class PayrollViewSet(viewsets.ModelViewSet):
+    queryset = Payroll.objects.all()
+    serializer_class = PayrollSerializer
+
 
 @api_view(["POST"])
 def login_view(request):
@@ -59,3 +74,38 @@ def login_view(request):
         "username": user.username,
         "role": role,
     })
+
+
+@api_view(["GET"])
+def my_profile(request):
+    auth_header = request.headers.get("Authorization", "")
+
+    if not auth_header.startswith("Token "):
+        return Response(
+            {"detail": "Authentication required."},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    token_key = auth_header.replace("Token ", "").strip()
+
+    try:
+        token = Token.objects.get(key=token_key)
+        user = token.user
+    except Token.DoesNotExist:
+        return Response(
+            {"detail": "Invalid token."},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    try:
+        employee = Employee.objects.get(email=user.email)
+    except Employee.DoesNotExist:
+        return Response(
+            {
+                "detail": "Employee profile not found.",
+                "logged_in_email": user.email
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    return Response(EmployeeSerializer(employee).data)

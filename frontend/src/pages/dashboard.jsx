@@ -7,31 +7,53 @@ function Dashboard() {
   const [leaves, setLeaves] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    };
+
     axios
-      .get("http://127.0.0.1:8000/api/employees/")
+      .get("http://127.0.0.1:8000/api/employees/", config)
       .then((response) => {
         setEmployees(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
 
     axios
-      .get("http://127.0.0.1:8000/api/attendance/")
+      .get("http://127.0.0.1:8000/api/attendance/", config)
       .then((response) => {
         setAttendance(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
 
     axios
-      .get("http://127.0.0.1:8000/api/leaves/")
+      .get("http://127.0.0.1:8000/api/leaves/", config)
       .then((response) => {
         setLeaves(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   }, []);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
 
   const presentToday = attendance.filter(
     (record) =>
       record.date === today &&
-      (record.status === "PRESENT" || record.status === "LATE")
+      (
+        record.status === "PRESENT" ||
+        record.status === "LATE"
+      )
   ).length;
 
   const onLeaveToday = leaves.filter(
@@ -47,8 +69,12 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+
       <h1>DayFlow</h1>
-      <p>Human Resource Management System</p>
+
+      <p>
+        Human Resource Management System
+      </p>
 
       <div className="stats-grid">
 
@@ -73,6 +99,21 @@ function Dashboard() {
         </div>
 
       </div>
+
+      {pendingRequests > 0 && (
+        <div className="stat-card">
+
+          <h3>🔔 Notifications</h3>
+
+          <p>
+            You have {pendingRequests} pending
+            leave request
+            {pendingRequests > 1 ? "s" : ""}.
+          </p>
+
+        </div>
+      )}
+
     </div>
   );
 }
