@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Attendance from "./pages/Attendance";
+import Leaves from "./pages/Leaves";
+
 import "./index.css";
 
 function App() {
@@ -103,15 +105,8 @@ function App() {
 
              <Route path="/attendance" element={<Attendance />} />
 
-              <Route
-                path="/leaves"
-                element={
-                  <div className="placeholder-page">
-                    <h2>Leave Management</h2>
-                    <p>Leave requests will appear here.</p>
-                  </div>
-                }
-              />
+              <Route path="/leaves" element={<Leaves />} />
+              
 
               <Route
                 path="/departments"
