@@ -76,10 +76,12 @@ function App() {
               Dashboard
             </NavLink>
 
-            <NavLink to="/employees" className="nav-item">
-              <span>♙</span>
-              Employees
-            </NavLink>
+           {role === "ADMIN" && (
+  <NavLink to="/employees" className="nav-item">
+    <span>♙</span>
+    Employees
+  </NavLink>
+)}
 
             <NavLink to="/attendance" className="nav-item">
               <span>◷</span>
@@ -186,9 +188,9 @@ function App() {
               <Route
                 path="/employees"
                 element={
-                  <ProtectedRoute>
+                  <AdminRoute>
                     <Employees />
-                  </ProtectedRoute>
+                  </AdminRoute>
                 }
               />
 
