@@ -28,24 +28,9 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function AdminRoute({ children }) {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (role !== "ADMIN") {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
-}
-
 function App() {
   const username = localStorage.getItem("username");
-  const role = localStorage.getItem("role");
+  const role = localStorage.getItem("role") || "EMPLOYEE";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -59,6 +44,7 @@ function App() {
     <BrowserRouter>
       <div className="app-layout">
 
+        {/* SIDEBAR */}
         <aside className="sidebar">
 
           <div className="brand">
@@ -70,6 +56,7 @@ function App() {
             </div>
           </div>
 
+          {/* MAIN MENU */}
           <div className="menu-section">
 
             <p className="menu-title">MAIN MENU</p>
@@ -79,12 +66,10 @@ function App() {
               Dashboard
             </NavLink>
 
-            {role === "ADMIN" && (
-              <NavLink to="/employees" className="nav-item">
-                <span>♙</span>
-                Employees
-              </NavLink>
-            )}
+            <NavLink to="/employees" className="nav-item">
+              <span>♙</span>
+              Employees
+            </NavLink>
 
             <NavLink to="/attendance" className="nav-item">
               <span>◷</span>
@@ -101,7 +86,6 @@ function App() {
               My Profile
             </NavLink>
 
-            {/* Payroll is available to both Admin and Employee */}
             <NavLink to="/payroll" className="nav-item">
               <span>₹</span>
               Payroll
@@ -109,33 +93,37 @@ function App() {
 
           </div>
 
-          {role === "ADMIN" && (
-            <div className="menu-section">
+          {/* MANAGEMENT */}
+          <div className="menu-section">
 
-              <p className="menu-title">MANAGEMENT</p>
+            <p className="menu-title">MANAGEMENT</p>
 
-              <NavLink to="/departments" className="nav-item">
-                <span>⌂</span>
-                Departments
-              </NavLink>
+            <NavLink to="/departments" className="nav-item">
+              <span>⌂</span>
+              Departments
+            </NavLink>
 
-              <NavLink to="/reports" className="nav-item">
-                <span>▥</span>
-                Reports
-              </NavLink>
+            <NavLink to="/reports" className="nav-item">
+              <span>▥</span>
+              Reports
+            </NavLink>
 
-            </div>
-          )}
+          </div>
 
+          {/* BOTTOM */}
           <div className="sidebar-bottom">
 
             <div className="help-box">
-              <div className="help-icon">?</div>
+
+              <div className="help-icon">
+                ?
+              </div>
 
               <div>
                 <strong>Need help?</strong>
                 <p>Contact support</p>
               </div>
+
             </div>
 
             <div className="profile">
@@ -146,7 +134,7 @@ function App() {
 
               <div className="profile-info">
                 <strong>{username || "User"}</strong>
-                <span>{role || "Employee"}</span>
+                <span>{role}</span>
               </div>
 
               <button
@@ -163,12 +151,15 @@ function App() {
 
         </aside>
 
+        {/* MAIN AREA */}
         <main className="main-area">
 
+          {/* TOP BAR */}
           <header className="topbar">
 
             <div>
               <h1>Good morning, Bhavana 👋</h1>
+
               <p>
                 Here's what's happening with your team today.
               </p>
@@ -193,10 +184,12 @@ function App() {
 
           </header>
 
+          {/* PAGE CONTENT */}
           <div className="content">
 
             <Routes>
 
+              {/* DASHBOARD */}
               <Route
                 path="/"
                 element={
@@ -206,15 +199,17 @@ function App() {
                 }
               />
 
+              {/* EMPLOYEES */}
               <Route
                 path="/employees"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <Employees />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               />
 
+              {/* ATTENDANCE */}
               <Route
                 path="/attendance"
                 element={
@@ -224,6 +219,7 @@ function App() {
                 }
               />
 
+              {/* LEAVES */}
               <Route
                 path="/leaves"
                 element={
@@ -233,6 +229,7 @@ function App() {
                 }
               />
 
+              {/* PROFILE */}
               <Route
                 path="/profile"
                 element={
@@ -242,6 +239,7 @@ function App() {
                 }
               />
 
+              {/* PAYROLL */}
               <Route
                 path="/payroll"
                 element={
@@ -251,24 +249,27 @@ function App() {
                 }
               />
 
+              {/* DEPARTMENTS */}
               <Route
                 path="/departments"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <Departments />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               />
 
+              {/* REPORTS */}
               <Route
                 path="/reports"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <Reports />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               />
 
+              {/* LOGIN */}
               <Route
                 path="/login"
                 element={<Login />}
